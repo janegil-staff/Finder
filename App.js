@@ -7,6 +7,7 @@ import TopBar from "./components/TopBar";
 import Constants from "expo-constants";
 import SwipeableImage from "./components/SwipeableImage";
 import BottomBar from "./components/BottomBar";
+import Swipes from "./components/Swipes";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -28,11 +29,36 @@ export default function App() {
     fetchUsers();
   }, []);
 
+  const handleLike = () => {
+    console.log("like");
+    nextUser();
+  };
+  const handlePass = () => {
+    console.log("pass");
+    nextUser();
+  };
+  const nextUser = () => {
+    const nextIndex = users.length - 2 === currentIndex ? 0 : currentIndex + 1;
+    setCurrentIndex(nextIndex);
+  };
+
   return (
     <View style={styles.container}>
       <TopBar />
       <View style={styles.swipes}>
-        {users.length > 1 && <SwipeableImage user={users[currentIndex]} />}
+        {users.length > 1 &&
+          users.map(
+            (u, i) =>
+              currentIndex === i && (
+                <Swipes
+                  key={i}
+                  currentIndex={currentIndex}
+                  users={users}
+                  handleLike={handleLike}
+                  handlePass={handlePass}
+                />
+              )
+          )}
       </View>
       <BottomBar />
       <StatusBar style="auto" />
