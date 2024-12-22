@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import { Alert, StyleSheet, Text, View } from "react-native";
@@ -12,7 +12,7 @@ import Swipes from "./components/Swipes";
 export default function App() {
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const swipesRef = useRef(null);
   async function fetchUsers() {
     try {
       const { data } = await axios.get("https://randomuser.me/api?results=50");
@@ -42,6 +42,14 @@ export default function App() {
     setCurrentIndex(nextIndex);
   };
 
+  const handleLikePress = () => {
+    swipesRef.current.openLeft();
+  }
+
+  const handlePassPress = () => {
+    swipesRef.current.openRight();
+  }
+
   return (
     <View style={styles.container}>
       <TopBar />
@@ -52,6 +60,7 @@ export default function App() {
               currentIndex === i && (
                 <Swipes
                   key={i}
+                  ref={swipesRef}
                   currentIndex={currentIndex}
                   users={users}
                   handleLike={handleLike}
@@ -60,7 +69,7 @@ export default function App() {
               )
           )}
       </View>
-      <BottomBar />
+      <BottomBar handleLikePress={handleLikePress} handlePassPress={handlePassPress} />
       <StatusBar style="auto" />
     </View>
   );
